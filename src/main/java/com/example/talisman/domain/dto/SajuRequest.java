@@ -1,5 +1,6 @@
 package com.example.talisman.domain.dto;
 
+import com.example.talisman.domain.entity.UserSaju;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -27,4 +28,17 @@ public class SajuRequest {
     private Integer nightOrMorning; // 야자시/조자시 여부
 
     private Integer interest;   // 관심사(1: 학업, 2: 연애, 3: 결혼, 4: 이직/취업)
+
+    public UserSaju toEntity(UserSaju userSaju) {
+        return UserSaju.builder()
+                .name(this.name)
+                .gender(this.gender)
+                .solarOrLunar(this.solarOrLunar)
+                .birthday(this.birthday)
+                .birthtime(this.birthtime)
+                .timeCheck(this.timeCheck)
+                .nightOrMorning(this.nightOrMorning)
+                .interest(this.interest)
+                .build();
+    }
 }
