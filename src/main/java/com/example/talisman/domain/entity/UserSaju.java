@@ -3,11 +3,10 @@ package com.example.talisman.domain.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "user_saju")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,4 +35,8 @@ public class UserSaju {
 
     @OneToOne(mappedBy = "userSaju", cascade = CascadeType.ALL)
     private SajuResult sajuResult;
+
+    public void setSajuResult(SajuResult sajuResult) {
+        this.sajuResult = sajuResult;
+    }
 }
