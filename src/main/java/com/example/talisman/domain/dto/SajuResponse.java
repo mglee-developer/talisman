@@ -13,6 +13,7 @@ import java.util.Map;
 @Builder
 public class SajuResponse {
     private Map<String, Integer> sajuResult;
+    private String missingElement;
     private String ment;
 
     public static SajuResponse from(SajuResult sajuResult){
@@ -26,6 +27,7 @@ public class SajuResponse {
 
         return SajuResponse.builder()
                 .sajuResult(resultMap)
+                .missingElement(sajuResult.getMissingElement())
                 .ment(sajuResult.getMent())
                 .build();
     }
