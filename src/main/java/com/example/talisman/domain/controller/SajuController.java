@@ -19,7 +19,7 @@ public class SajuController {
 
     @PostMapping
     public ResponseEntity<SajuResponse> getSajuResult(@Valid @RequestBody SajuRequest request) {
-
+        // 사주정보 입력 후 결과 반환하기
         SajuResponse response = sajuService.getSajuResult(request);
 
         return ResponseEntity.ok(response);
