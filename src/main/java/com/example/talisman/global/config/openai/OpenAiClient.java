@@ -26,7 +26,7 @@ public class OpenAiClient {
         );
 
         OpenAiResponse response = restClient.post()
-                .uri("/chat/completion")
+                .uri("/chat/completions")
                 .body(request)
                 .retrieve()
                 .body(OpenAiResponse.class);
