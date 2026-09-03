@@ -9,6 +9,8 @@ import com.example.talisman.domain.entity.SajuResult;
 import com.example.talisman.domain.entity.UserSaju;
 import com.example.talisman.domain.repository.UserSajuRepository;
 import com.example.talisman.global.config.openai.OpenAiClient;
+import com.example.talisman.global.exception.BusinessException;
+import com.example.talisman.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -76,6 +78,9 @@ public class SajuService {
 
         // OpenAI API 연결해서 멘트 가져오기
         String str = String.join(", ", missingElements);
+        if(str.isBlank()) {
+            throw new BusinessException(ErrorCode.INVALID_DATA, "부족한 오행 정보가 유효하지 않습니다.");
+        }
         String ment = callOpenAi(str, request.getInterest());
 
         // 4. ResponseDTO에 담기
@@ -173,7 +178,7 @@ public class SajuService {
             return openAiClient.generateText(systemPrompt, userPrompt);
         } catch(Exception e) {
             // 오류 발생해도 서비스 전체가 멈추지 않도록 예외 처리
-            return "오늘부터 너의 운은 최고야! 모든 액운을 거절할게!";
+            throw new BusinessException(ErrorCode.OPEN_AI_ERROR, "부적 기운을 불러오는 중에 잠시 통신이 원활하지 않습니다. 다시 시도해주세요.");
         }
     }
 
