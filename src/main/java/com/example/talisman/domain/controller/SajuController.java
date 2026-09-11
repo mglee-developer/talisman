@@ -3,6 +3,7 @@ package com.example.talisman.domain.controller;
 import com.example.talisman.domain.dto.SajuRequest;
 import com.example.talisman.domain.dto.SajuResponse;
 import com.example.talisman.domain.service.SajuService;
+import com.example.talisman.global.common.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +19,10 @@ public class SajuController {
     private final SajuService sajuService;
 
     @PostMapping
-    public ResponseEntity<SajuResponse> getSajuResult(@Valid @RequestBody SajuRequest request) {
+    public ApiResponse<SajuResponse> getSajuResult(@Valid @RequestBody SajuRequest request) {
         // 사주정보 입력 후 결과 반환하기
         SajuResponse response = sajuService.getSajuResult(request);
 
-        return ResponseEntity.ok(response);
+        return ApiResponse.success("API 부적 멘트가 성공적으로 생성되었습니다.", response);
     }
 }
