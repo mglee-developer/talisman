@@ -12,17 +12,19 @@ public class ManseryeokRequest {
     private int day;
     private int hour;
     private int minute;
+    private String gender;
     private boolean isLunar;
     private boolean isLeapMonth;
     private String dayBoundary; // 야자시 적용
 
     @Builder
-    public ManseryeokRequest(int year, int month, int day, int hour, int minute, boolean isLunar, boolean isLeapMonth, String dayBoundary) {
+    public ManseryeokRequest(int year, int month, int day, int hour, int minute, String gender, boolean isLunar, boolean isLeapMonth, String dayBoundary) {
         this.year = year;
         this.month = month;
         this.day = day;
         this.hour = hour;
         this.minute = minute;
+        this.gender = gender;
         this.isLunar = isLunar;
         this.isLeapMonth = isLeapMonth;
         this.dayBoundary = dayBoundary;

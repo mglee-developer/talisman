@@ -34,6 +34,7 @@ public class SajuService {
         int day = Integer.valueOf(request.getBirthday().substring(6, 8));
         int hour = Integer.valueOf(request.getBirthtime().substring(0, 2));
         int minute = Integer.valueOf(request.getBirthtime().substring(2, 4));
+        String gender = request.getGender();
         boolean isLunar = request.getSolarOrLunar() == 1 ? false : true;   // 양력/음력
         boolean isLeapMonth = calculateLeapMonth(year);
         String dayBoundary = calculateDayBoundar(hour, request.getNightOrMorning());
@@ -44,6 +45,7 @@ public class SajuService {
                 .day(day)
                 .hour(hour)
                 .minute(minute)
+                .gender(gender)
                 .isLunar(isLunar)
                 .isLeapMonth(isLeapMonth)
                 .dayBoundary(dayBoundary)
@@ -119,7 +121,7 @@ public class SajuService {
         savedUserSaju.setSajuResult(sajuResult);
 
         // 6. 컨트롤러 반환
-        return SajuResponse.from(sajuResult);
+        return sajuResponse;
     }
 
     // 부족한 오행 + 고민거리에 따른 부적 멘트 생성
@@ -165,7 +167,7 @@ public class SajuService {
         else {
             userPrompt = String.format("""
                     부족한 오행: %s
-                    부족한 '%s' 기운을 보완하면서 고민거리인 '%s' 문제를 유쾌하게 타파해 줄 부적 멘트를 작성해 줘.
+                    부족한 '%s' 기운을 보완하면서 일상의 운을 높여줄 유쾌한 부적 멘트를 작성해 줘.
                     
                     [필수 포함 조건]
                     1. 고민 해결에 도움을 줄 '오늘의 행운 팁(추천 컬러, 장소, 아이템, 행동 중 1가지)'을 자연스럽게 1개 포함할 것.

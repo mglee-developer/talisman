@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>최고심 부적 API 연동 테스트</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; padding: 30px; background-color: #f5f5f5; color: #333; }
+        .container { max-width: 480px; margin: 0 auto; background: white; padding: 30px 24px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+
+        .form-group { margin-bottom: 24px; }
+        .label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        label.title { font-weight: 700; font-size: 15px; color: #222; }
+
+        .sub-link { font-size: 13px; color: #666; text-decoration: none; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+        .icon-search { display: inline-block; width: 14px; height: 14px; background: #666; color: white; border-radius: 50%; text-align: center; font-size: 9px; line-height: 14px; font-weight: bold; }
+
+        /* 입력 폼 공통 스타일 */
+        input[type="text"], select {
+            width: 100%;
+            height: 48px;
+            padding: 0 16px;
+            border: 1px solid #dcdcdc;
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+            color: #333;
+            background-color: #fff;
+            transition: border-color 0.2s;
+        }
+        input::placeholder { color: #bbb; }
+        input:focus, select:focus { border-color: #555; }
+        input:disabled { background-color: #f5f5f5; color: #aaa; cursor: not-allowed; }
+
+        /* 성별 세그먼트 버튼 (여성 / 남성) */
+        .gender-segmented {
+            display: flex;
+            border: 1px solid #dcdcdc;
+            border-radius: 10px;
+            padding: 3px;
+            background-color: #fff;
+            height: 48px;
+        }
+        .gender-segmented label {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #aaa;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .gender-segmented input[type="radio"] { display: none; }
+        .gender-segmented input[type="radio"]:checked + span {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #333;
+            border-radius: 8px;
+            color: #222;
+            font-weight: 700;
+        }
+
+        /* 생년월일시 행 레이아웃 */
+        .datetime-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .calendar-select { width: 90px !important; flex-shrink: 0; }
+        .date-input { flex: 1; }
+        .time-input { flex: 1; }
+
+        /* 하단 라디오/체크 옵션 */
+        .options-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .custom-option {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #444;
+            cursor: pointer;
+        }
+        .custom-option input[type="checkbox"], .custom-option input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #333;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        /* Submit 버튼 및 결과 박스 */
+        button.submit-btn {
+            width: 100%;
+            height: 52px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button.submit-btn:hover { background-color: #111; }
+
+        .result-box { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; }
+        .success { background-color: #e8f5e9; border: 1px solid #a5d6a7; color: #2e7d32; }
+        .error { background-color: #ffebee; border: 1px solid #ef9a9a; color: #c62828; }
+        pre { white-space: pre-wrap; word-break: break-all; margin-top: 10px; font-size: 13px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="text-align: center; margin-bottom: 24px;">🔮 최고심 부적 생성기</h2>
+
+    <!-- 1. 이름 -->
+    <div class="form-group">
+        <label class="title" for="name">이름</label>
+        <input type="text" id="name" maxlength="12" placeholder="최대 12글자 이내로 입력하세요" value="홍길동">
+    </div>
+
+    <!-- 2. 성별 (female / male 전송) -->
+    <div class="form-group">
+        <label class="title">성별</label>
+        <div class="gender-segmented">
+            <label>
+                <input type="radio" name="gender" value="female" checked>
+                <span>여성</span>
+            </label>
+            <label>
+                <input type="radio" name="gender" value="male">
+                <span>남성</span>
+            </label>
+        </div>
+    </div>
+
+    <!-- 3. 생년월일시 -->
+    <div class="form-group">
+        <div class="label-row">
+            <label class="title">생년월일시</label>
+            <span class="sub-link" onclick="alert('12간지 시간표 안내 서비스 준비 중')">12간지 시간표 <i class="icon-search">Q</i></span>
+        </div>
+
+        <div class="datetime-row">
+            <!-- 양력/음력 선택 -->
+            <select id="calendarType" class="calendar-select">
+                <option value="1" selected>양력</option>
+                <option value="2">음력</option>
+            </select>
+            <!-- 날짜 입력 (YYYY/MM/DD) -->
+            <input type="text" id="birthDate" class="date-input" placeholder="1994/02/04" value="1995/05/15">
+            <!-- 시간 입력 (HH:mm) -->
+            <input type="text" id="birthTime" class="time-input" placeholder="23:35" value="14:30">
+        </div>
+
+        <!-- 하단 시간모름 및 야자시/조자시 옵션 -->
+        <div class="options-row">
+            <label class="custom-option">
+                <input type="checkbox" id="timeUnknown" onchange="toggleTimeInput()">
+                <span>시간 모름</span>
+            </label>
+            <label class="custom-option">
+                <input type="checkbox" id="jasiCheck">
+                <span>야자시/조자시 <i class="icon-search">Q</i></span>
+            </label>
+        </div>
+    </div>
+
+    <!-- 4. 고민거리 (단일 선택 라디오 버튼) -->
+    <div class="form-group">
+        <label class="title" style="margin-bottom: 10px; display: block;">고민거리 선택</label>
+        <div class="options-row">
+            <label class="custom-option">
+                <input type="radio" name="interest" value="0" checked>
+                <span>없음</span>
+            </label>
+            <label class="custom-option">
+                <input type="radio" name="interest" value="1">
+                <span>연애</span>
+            </label>
+            <label class="custom-option">
+                <input type="radio" name="interest" value="2">
+                <span>결혼</span>
+            </label>
+            <label class="custom-option">
+                <input type="radio" name="interest" value="3">
+                <span>취업</span>
+            </label>
+            <label class="custom-option">
+                <input type="radio" name="interest" value="4">
+                <span>이직</span>
+            </label>
+        </div>
+    </div>
+
+    <button class="submit-btn" onclick="sendRequest()">부적 멘트 생성하기</button>
+
+    <!-- 응답 결과 표시 영역 -->
+    <div id="resultBox" class="result-box">
+        <h4 id="resultStatus" style="margin: 0 0 8px 0;"></h4>
+        <p id="resultMessage" style="margin: 0; font-weight: bold;"></p>
+        <pre id="resultData"></pre>
+    </div>
+</div>
+
+<script>
+    // 1. 생년월일 자동 포맷팅 (YYYY/MM/DD)
+    document.getElementById('birthDate').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/[^0-9]/g, '');
+        if (value.length > 8) value = value.slice(0, 8);
+
+        if (value.length >= 7) {
+            value = value.replace(/(\d{4})(\d{2})(\d{1,2})/, '$1/$2/$3');
+        } else if (value.length >= 5) {
+            value = value.replace(/(\d{4})(\d{1,2})/, '$1/$2');
+        }
+        e.target.value = value;
+    });
+
+    // 2. 시간 자동 포맷팅 (HH:mm)
+    document.getElementById('birthTime').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/[^0-9]/g, '');
+        if (value.length > 4) value = value.slice(0, 4);
+
+        if (value.length >= 3) {
+            value = value.replace(/(\d{2})(\d{1,2})/, '$1:$2');
+        }
+        e.target.value = value;
+    });
+
+    // 3. 시간 모름 토글 처리
+    function toggleTimeInput() {
+        const isUnknown = document.getElementById('timeUnknown').checked;
+        const timeInput = document.getElementById('birthTime');
+        const jasiCheck = document.getElementById('jasiCheck');
+
+        timeInput.disabled = isUnknown;
+        jasiCheck.disabled = isUnknown;
+
+        if (isUnknown) {
+            timeInput.value = '';
+            jasiCheck.checked = false;
+        }
+    }
+
+    // 4. API 요청 함수
+    async function sendRequest() {
+        const resultBox = document.getElementById('resultBox');
+        const resultStatus = document.getElementById('resultStatus');
+        const resultMessage = document.getElementById('resultMessage');
+        const resultData = document.getElementById('resultData');
+
+        const isTimeUnknown = document.getElementById('timeUnknown').checked;
+
+        // 생년월일 (숫자 8자리: YYYYMMDD)
+        const rawDate = document.getElementById('birthDate').value.replace(/[^0-9]/g, '');
+
+        // 시간 (시간 모름 시 NPO 방지용 "0000" 전달)
+        const rawTimeStr = document.getElementById('birthTime').value.replace(/[^0-9]/g, '');
+        const formattedTime = isTimeUnknown ? "0000" : (rawTimeStr.padStart(4, '0'));
+
+        // 고민거리 선택값 (0:없음, 1:연애, 2:결혼, 3:취업, 4:이직)
+        const selectedInterest = parseInt(document.querySelector('input[name="interest"]:checked').value, 10);
+        const interestValue = selectedInterest === 0 ? null : selectedInterest;
+
+        // 백엔드 SajuRequest 매핑 Payload
+        const payload = {
+            name: document.getElementById('name').value,
+            gender: document.querySelector('input[name="gender"]:checked').value,         // "female" 또는 "male"
+            birthday: rawDate,                                                             // 예: "19940204"
+            birthtime: formattedTime,                                                       // 예: "2335" 또는 "0000"
+            solarOrLunar: parseInt(document.getElementById('calendarType').value, 10),     // 양력: 1, 음력: 2
+            timeCheck: isTimeUnknown ? 1 : 0,                                              // 시간모름: 1, 미체크: 0
+            nightOrMorning: document.getElementById('jasiCheck').checked ? 1 : 0,          // 야자시/조자시: 1, 미체크: 0
+            interest: interestValue                                                        // 1, 2, 3, 4 또는 null
+        };
+
+        console.log("서버로 전송되는 Payload:", payload);
+
+        try {
+            const response = await fetch('http://localhost:8080/api/v1/saju', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const json = await response.json();
+            resultBox.style.display = 'block';
+
+            if (response.ok && json.status === 'SUCCESS') {
+                resultBox.className = 'result-box success';
+                resultStatus.innerText = '✅ ' + json.message;
+                // json.data가 null이 아닐 때만 ment 출력하도록 안전 처리
+                resultMessage.innerText = json.data?.ment ? ('💌 ' + json.data.ment) : '멘트 데이터를 가져오지 못했습니다.';
+                resultData.innerText = JSON.stringify(json.data, null, 2);
+            } else {
+                // 예외 응답(Status: ERROR) 시
+                resultBox.className = 'result-box error';
+                resultStatus.innerText = '❌ 에러 발생';
+                resultMessage.innerText = json.message;
+                resultData.innerText = JSON.stringify(json, null, 2);
+            }
+        } catch (error) {
+            resultBox.style.display = 'block';
+            resultBox.className = 'result-box error';
+            resultStatus.innerText = '🚨 서버 통신 실패 (Network/CORS Error)';
+            resultMessage.innerText = 'Spring Boot 서버 실행 상태 및 CORS 설정을 확인해주세요.';
+            resultData.innerText = error.message;
+        }
+    }
+</script>
+
+</body>
+</html>

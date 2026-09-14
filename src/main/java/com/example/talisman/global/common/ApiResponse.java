@@ -14,17 +14,17 @@ public class ApiResponse<T> {
         this.data = data;
     }
 
-    // 성공응답 : 데이터가 있는 경우
-    public static <T> ApiResponse<T> success(String status, String message, T data) {
+    // 데이터가 있는 성공 응답 (data를 정상 전달)
+    public static <T> ApiResponse<T> success(String message, T data) {
         return new ApiResponse<>("SUCCESS", message, data);
     }
 
-    // 성공응답 : 데이터가 없거나 메시지만 전달하는 경우
-    public static <T> ApiResponse<T> success(String message, T data) {
+    // 데이터가 없는 성공 응답 (메시지만 전달)
+    public static <T> ApiResponse<T> success(String message) {
         return new ApiResponse<>("SUCCESS", message, null);
     }
 
-    // 실패응답
+    // 실패 응답
     public static <T> ApiResponse<T> error(String message) {
         return new ApiResponse<>("ERROR", message, null);
     }
