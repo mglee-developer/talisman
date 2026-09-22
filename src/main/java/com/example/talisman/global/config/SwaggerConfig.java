@@ -11,8 +11,8 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
         return new OpenAPI()
                 .info(new Info()
-                .title("Talisman API")
-                .description("Talisman API 서버")
+                .title("내운내뽑 API Document")
+                .description("Gen-Z 타겟의 위트 있는 사주/부적 서비스 '내운내뽑' 백엔드 API 명세서")
                 .version("v1.0.0"))
                 ;
     }
