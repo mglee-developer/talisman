@@ -11,8 +11,10 @@ import com.example.talisman.domain.repository.UserSajuRepository;
 import com.example.talisman.global.config.openai.OpenAiClient;
 import com.example.talisman.global.exception.BusinessException;
 import com.example.talisman.global.exception.ErrorCode;
+import com.github.usingsky.calendar.KoreanLunarCalendar;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,6 +23,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class SajuService {
 
     private final SajuClient sajuClient;
@@ -32,12 +35,16 @@ public class SajuService {
         int year = Integer.valueOf(request.getBirthday().substring(0, 4));
         int month = Integer.valueOf(request.getBirthday().substring(4, 6));
         int day = Integer.valueOf(request.getBirthday().substring(6, 8));
-        int hour = Integer.valueOf(request.getBirthtime().substring(0, 2));
-        int minute = Integer.valueOf(request.getBirthtime().substring(2, 4));
+        int hour = 0;
+        int minute = 0;
         String gender = request.getGender();
         boolean isLunar = request.getSolarOrLunar() == 1 ? false : true;   // 양력/음력
-        boolean isLeapMonth = calculateLeapMonth(year);
+        boolean isLeapMonth = calculateLeapMonth(isLunar, year, month);
         Integer timeCheck = request.getTimeCheck();
+        if(timeCheck == 0) {    // 태어난 시간을 아는 경우
+            hour = Integer.valueOf(request.getBirthtime().substring(0, 2));
+            minute = Integer.valueOf(request.getBirthtime().substring(2, 4));
+        }
         String dayBoundary = calculateDayBoundar(hour, request.getNightOrMorning());
 
         ManseryeokRequest manseryeokRequest = ManseryeokRequest.builder()
@@ -179,8 +186,8 @@ public class SajuService {
         String strInterest = switch(interest != null ? interest : 0) {
             case 1 -> "연애";
             case 2 -> "결혼";
-            case 3 -> "취업";
-            case 4 -> "이직";
+            case 3 -> "학업";
+            case 4 -> "취업/이직";
             default -> null;
         };
 
@@ -232,7 +239,13 @@ public class SajuService {
     }
 
     // 윤달 계산
-    private boolean calculateLeapMonth(int year) {
-        return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+    private boolean calculateLeapMonth(boolean isLunar, int year, int month) {
+        if(!isLunar) {   // 양력인 경우
+            return false;
+        }
+
+        // 음력 날짜를 기준으로 윤달 여부
+        KoreanLunarCalendar calendar = KoreanLunarCalendar.getInstance();
+        return calendar.setLunarDate(year, month, 1, true);
     }
 }

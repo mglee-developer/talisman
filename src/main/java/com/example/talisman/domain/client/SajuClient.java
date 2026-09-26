@@ -27,6 +27,6 @@ public class SajuClient {
                 .bodyValue(request)
                 .retrieve()
                 .bodyToMono(ManseryeokResponse.class)
-                .block();
+                .block();   // 백엔드 애플리케이션 아키텍처가 동기식(MVC) 구조여서 block 호출
     }
 }

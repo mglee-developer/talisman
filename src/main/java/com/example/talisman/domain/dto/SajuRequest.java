@@ -36,7 +36,7 @@ public class SajuRequest {
     @Schema(description = "야자시/조자시 적용(0 : 미적용, 1 : 적용)", example = "1")
     private Integer nightOrMorning; // 야자시/조자시 여부
 
-    @Schema(description = "고민거리(1 : 학업, 2 : 연애, 3 : 결혼, 4 : 이직/취업)", example = "2")
+    @Schema(description = "고민거리(1 : 연애, 2 : 결혼, 3 : 학업, 4 : 취업/이직)", example = "2")
     private Integer interest;   // 관심사(1: 학업, 2: 연애, 3: 결혼, 4: 이직/취업)
 
     public UserSaju toEntity(UserSaju userSaju) {
